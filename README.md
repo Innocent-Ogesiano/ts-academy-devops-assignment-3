@@ -22,7 +22,7 @@ deployment.
 ## Project layout
 
 ```
-assignment-3/
+.
 ├── README.md
 ├── app/
 │   └── app.sh
@@ -47,3 +47,20 @@ assignment-3/
 ./tests/test.sh       # run the test suite
 ./scripts/build.sh    # build the Docker image
 ```
+
+## Verifying the test suite catches failures
+
+To confirm `tests/test.sh` actually fails when the app misbehaves (rather than
+passing regardless), a failure was injected and then reverted:
+
+- **Injection**: in the `help` test, the `assert_contains` needle was changed
+  from `"Usage"` to `"NoSuchString"`, which is not in the app's help output.
+- **Result**: the suite reported `[FAIL] help output mentions merge (expected
+  to find 'NoSuchString')` and exited non-zero (11 passed, 1 failed).
+- **Fix**: the needle was reverted to `"Usage"`, restoring 12/12 passing.
+
+This confirms the harness's exit code and pass/fail reporting are meaningful,
+not just always-green. Note: an earlier edit to that line only changed the
+test's *description* string (to "mentions merge") without touching the
+needle — that edit didn't affect the assertion, so the test kept passing as
+expected; only changing the needle itself reproduces a real failure.
