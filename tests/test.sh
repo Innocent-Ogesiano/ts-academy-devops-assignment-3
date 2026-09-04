@@ -63,7 +63,7 @@ echo "== Running tests against $APP =="
 help_output="$("$APP" help 2>&1)"
 help_exit=$?
 assert_exit "help exits 0" 0 -- "$APP" help
-assert_contains "help output mentions merge" "$help_output" "Usage"
+assert_contains "help output mentions usage" "$help_output" "NoSuchString"
 
 # 2. system-info command
 info_output="$("$APP" system-info 2>&1)"
